@@ -51,13 +51,20 @@ var AllureReporter = (function (_events$EventEmitter) {
       epilogue.call(baseReporter);
     });
 
-    this.on('add-feature-to-report', function (_ref) {
+    this.on('allure:parameters', function (_ref) {
       var event = _ref.event;
       var cid = _ref.cid;
-      var feature = _ref.feature;
-      var key = _ref.key;
+      var data = _ref.data;
 
-      console.log('Process ' + cid + '. We tests feature: ' + feature + ' key: ' + key);
+      var allure = _this.getAllure(cid);
+      if (!AllureReporter.isAnyTestRunning(allure)) {
+        return;
+      }
+
+      _Object$keys(data).forEach(function (key) {
+        AllureReporter.addArgument(allure, '' + key, '' + environments[key]);
+      });
+      console.log('Event ' + event + '.');
     });
 
     this.on('suite:start', function (suite) {

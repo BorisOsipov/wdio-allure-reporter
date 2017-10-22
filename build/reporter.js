@@ -51,6 +51,15 @@ var AllureReporter = (function (_events$EventEmitter) {
       epilogue.call(baseReporter);
     });
 
+    this.on('add-feature-to-report', function (_ref) {
+      var event = _ref.event;
+      var cid = _ref.cid;
+      var feature = _ref.feature;
+      var key = _ref.key;
+
+      console.log('Process ' + cid + '. We tests feature: ' + feature + ' key: ' + key);
+    });
+
     this.on('suite:start', function (suite) {
       var setEnvironment = function setEnvironment(allure, environments) {
         if (environments) {

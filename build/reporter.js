@@ -62,7 +62,7 @@ var AllureReporter = (function (_events$EventEmitter) {
       }
 
       _Object$keys(data).forEach(function (key) {
-        AllureReporter.addArgument(allure, '' + key, '' + environments[key]);
+        AllureReporter.addArgument(allure, '' + key, '' + data[key]);
       });
       console.log('Event ' + event + '.');
     });

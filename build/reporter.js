@@ -52,7 +52,6 @@ var AllureReporter = (function (_events$EventEmitter) {
     });
 
     this.on('allure:parameters', function (_ref) {
-      var event = _ref.event;
       var cid = _ref.cid;
       var data = _ref.data;
 
@@ -64,7 +63,6 @@ var AllureReporter = (function (_events$EventEmitter) {
       _Object$keys(data).forEach(function (key) {
         AllureReporter.dumpText(allure, '' + key, '' + data[key]);
       });
-      console.log('Event ' + event + '.');
     });
 
     this.on('suite:start', function (suite) {
@@ -198,7 +196,7 @@ var AllureReporter = (function (_events$EventEmitter) {
   }, {
     key: 'dumpText',
     value: function dumpText(allure, name, text) {
-      allure.addAttachment(name, '' + text, 'text/plain');
+      allure.addAttachment(name, Buffer.from('' + text, 'utf8'), 'text/plain');
     }
   }, {
     key: 'dumpImage',

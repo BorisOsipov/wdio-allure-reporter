@@ -27,4 +27,4 @@ node_modules
 .allure-results/
 screenshots/
 
-.idea
+.idea/

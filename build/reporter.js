@@ -154,11 +154,15 @@ var AllureReporter = (function (_events$EventEmitter) {
       }
 
       if (command.requestOptions.uri.path.match(/\/wd\/hub\/session\/[^/]*\/screenshot/)) {
-        AllureReporter.dumpImage(allure, 'Screenshot', command.body.value);
+        if (command.body.value) {
+          AllureReporter.dumpImage(allure, 'Screenshot', command.body.value);
+        }
       }
 
       if (command.requestOptions.uri.path.match(/\/wd\/hub\/session\/[^/]*\/log/)) {
-        AllureReporter.dumpJSON(allure, 'Browser logs', command.body);
+        if (command.body) {
+          AllureReporter.dumpJSON(allure, 'Browser logs', command.body);
+        }
       }
     });
 

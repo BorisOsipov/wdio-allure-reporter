@@ -1,20 +1,36 @@
 'use strict';
 
-var _get = require('babel-runtime/helpers/get')['default'];
-
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _Object$keys = require('babel-runtime/core-js/object/keys')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+var _keys = require('babel-runtime/core-js/object/keys');
+
+var _keys2 = _interopRequireDefault(_keys);
+
+var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _events = require('events');
 
@@ -24,51 +40,51 @@ var _allureJsCommons = require('allure-js-commons');
 
 var _allureJsCommons2 = _interopRequireDefault(_allureJsCommons);
 
-var _allureJsCommonsBeansStep = require('allure-js-commons/beans/step');
+var _step = require('allure-js-commons/beans/step');
 
-var _allureJsCommonsBeansStep2 = _interopRequireDefault(_allureJsCommonsBeansStep);
+var _step2 = _interopRequireDefault(_step);
 
-var AllureReporter = (function (_events$EventEmitter) {
-  _inherits(AllureReporter, _events$EventEmitter);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var AllureReporter = function (_events$EventEmitter) {
+  (0, _inherits3.default)(AllureReporter, _events$EventEmitter);
 
   function AllureReporter(baseReporter, config) {
-    var _this = this;
+    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    (0, _classCallCheck3.default)(this, AllureReporter);
 
-    var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+    var _this = (0, _possibleConstructorReturn3.default)(this, (AllureReporter.__proto__ || (0, _getPrototypeOf2.default)(AllureReporter)).call(this));
 
-    _classCallCheck(this, AllureReporter);
+    _this.baseReporter = baseReporter;
+    _this.config = config;
+    _this.options = options;
+    _this.allures = {};
 
-    _get(Object.getPrototypeOf(AllureReporter.prototype), 'constructor', this).call(this);
+    var epilogue = _this.baseReporter.epilogue;
 
-    this.baseReporter = baseReporter;
-    this.config = config;
-    this.options = options;
-    this.allures = {};
 
-    var epilogue = this.baseReporter.epilogue;
-
-    this.on('end', function () {
+    _this.on('end', function () {
       epilogue.call(baseReporter);
     });
 
-    this.on('allure:parameters', function (_ref) {
-      var cid = _ref.cid;
-      var data = _ref.data;
+    _this.on('allure:parameters', function (_ref) {
+      var cid = _ref.cid,
+          data = _ref.data;
 
       var allure = _this.getAllure(cid);
       if (!AllureReporter.isAnyTestRunning(allure)) {
         return;
       }
 
-      _Object$keys(data).forEach(function (key) {
+      (0, _keys2.default)(data).forEach(function (key) {
         AllureReporter.dumpText(allure, '' + key, '' + data[key]);
       });
     });
 
-    this.on('suite:start', function (suite) {
+    _this.on('suite:start', function (suite) {
       var setEnvironment = function setEnvironment(allure, environments) {
         if (environments) {
-          _Object$keys(environments).forEach(function (key) {
+          (0, _keys2.default)(environments).forEach(function (key) {
             AllureReporter.addEnvironment(allure, '' + key, '' + environments[key]);
           });
         }
@@ -84,13 +100,13 @@ var AllureReporter = (function (_events$EventEmitter) {
           setEnvironment(allure, _this.options.environments);
         }
       } else {
-        var currentSuite = allure.getCurrentSuite();
-        var prefix = currentSuite ? currentSuite.name + ' ' : '';
+        var _currentSuite = allure.getCurrentSuite();
+        var prefix = _currentSuite ? _currentSuite.name + ' ' : '';
         allure.startSuite(prefix + suite.title);
       }
     });
 
-    this.on('suite:end', function (suite) {
+    _this.on('suite:end', function (suite) {
       if (suite.parent) {
         if (suite.title) {
           _this.getAllure(suite.cid).endCase('passed');
@@ -100,7 +116,7 @@ var AllureReporter = (function (_events$EventEmitter) {
       }
     });
 
-    this.on('test:start', function (test) {
+    _this.on('test:start', function (test) {
       var allure = _this.getAllure(test.cid);
 
       if (!AllureReporter.isAnyTestRunning(allure)) {
@@ -111,7 +127,7 @@ var AllureReporter = (function (_events$EventEmitter) {
       }
     });
 
-    this.on('test:pass', function (test) {
+    _this.on('test:pass', function (test) {
       var allure = _this.getAllure(test.cid);
 
       if (!AllureReporter.isAnyTestRunning(allure)) {
@@ -121,7 +137,7 @@ var AllureReporter = (function (_events$EventEmitter) {
       allure.endStep('passed');
     });
 
-    this.on('test:fail', function (test) {
+    _this.on('test:fail', function (test) {
       if (test.title) {
         var allure = _this.getAllure(test.cid);
         if (!AllureReporter.isAnyTestRunning(allure)) {
@@ -130,23 +146,23 @@ var AllureReporter = (function (_events$EventEmitter) {
 
         allure.startStep(test.title);
         var testStack = '' + test.err.stack;
-        var _status = testStack.includes('AssertionError:') ? 'failed' : 'broken';
+        var status = testStack.includes('AssertionError:') ? 'failed' : 'broken';
 
-        while (allure.getCurrentSuite().currentStep instanceof _allureJsCommonsBeansStep2['default']) {
-          allure.endStep(_status);
+        while (allure.getCurrentSuite().currentStep instanceof _step2.default) {
+          allure.endStep(status);
         }
 
-        allure.endCase(_status, test.err);
+        allure.endCase(status, test.err);
       }
     });
 
-    this.on('test:pending', function (test) {
+    _this.on('test:pending', function (test) {
       if (test.title) {
         _this.getAllure(test.cid).endStep('pending');
       }
     });
 
-    this.on('runner:result', function (command) {
+    _this.on('runner:result', function (command) {
       var allure = _this.getAllure(command.cid);
 
       if (!AllureReporter.isAnyTestRunning(allure)) {
@@ -167,22 +183,23 @@ var AllureReporter = (function (_events$EventEmitter) {
     });
 
     // eslint-disable-next-line no-unused-vars
-    this.on('runner:command', function (command) {});
+    _this.on('runner:command', function (command) {});
     // eslint-disable-next-line no-unused-vars
-    this.on('hook:start', function (hook) {});
+    _this.on('hook:start', function (hook) {});
 
     // eslint-disable-next-line no-unused-vars
-    this.on('hook:end', function (hook) {});
+    _this.on('hook:end', function (hook) {});
+    return _this;
   }
 
-  _createClass(AllureReporter, [{
+  (0, _createClass3.default)(AllureReporter, [{
     key: 'getAllure',
     value: function getAllure(cid) {
       if (this.allures[cid]) {
         return this.allures[cid];
       }
 
-      var allure = new _allureJsCommons2['default']();
+      var allure = new _allureJsCommons2.default();
       allure.setOptions({ targetDir: this.options.outputDir || 'allure-results' });
       this.allures[cid] = allure;
       return this.allures[cid];
@@ -195,7 +212,7 @@ var AllureReporter = (function (_events$EventEmitter) {
   }, {
     key: 'dumpJSON',
     value: function dumpJSON(allure, name, json) {
-      allure.addAttachment(name, JSON.stringify(json, null, 2), 'application/json');
+      allure.addAttachment(name, (0, _stringify2.default)(json, null, 2), 'application/json');
     }
   }, {
     key: 'dumpText',
@@ -238,9 +255,8 @@ var AllureReporter = (function (_events$EventEmitter) {
       AllureReporter.addLabel(allure, 'story', story);
     }
   }]);
-
   return AllureReporter;
-})(_events2['default'].EventEmitter);
+}(_events2.default.EventEmitter);
 
-exports['default'] = AllureReporter;
+exports.default = AllureReporter;
 module.exports = exports['default'];

@@ -95,6 +95,9 @@ var AllureReporter = function (_events$EventEmitter) {
       if (suite.parent) {
         if (suite.title) {
           allure.startCase(suite.title);
+          var currentTest = allure.getCurrentTest();
+          currentTest.addLabel('thread', suite.cid);
+
           var currentSuite = allure.getCurrentSuite();
           AllureReporter.addFeature(allure, currentSuite.name);
           setEnvironment(allure, _this.options.environments);
